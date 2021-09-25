@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mt-3">
+<div class="container">
+  <div class="row">
+  {% if profile.username == request.user %}
+  <div class="col-md-11 col-sm-10">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <a href="{% url 'create-blog' %}" type="button" class="btn btn-outline-dark" style="width: 8rem;">Write a blog</a>
+        </ol>
+    </nav>
+</div>
+<div class="col-md-1 col-sm-2">
+  <a href="{% url 'search-people' %}"><i class="fas fa-search"></i></i></a>
+</div>
+<hr>
+  {% endif %}
+    <div class="row justify-content-center">
+
+    <div class="col-md-6 col-sm-12 p-">
+    <div class="card shadow-sm p-3 mb-5 rounded text-dark mb-3 text-center" style="max-width: 50rem; border:none;">
+        <div class="card-body">
+          <p class="card-text row"><a>Posts:{{blog_post.count}}</a> <a>Following:{{following_count}}</a> <a>Followers:{{follower_count}}</a></p>
+          <p class="card-text text-muted">Username : {{ profile.username }}</p>
+          {% if profile.name %}
+          <p class="text-muted">Name : {{ profile.name }}</p>
+          {% endif %}
+          {% if profile.bio %}
+          <p class="text-muted">Bio : {{ profile.bio }}</p>
+          {% endif %}
+          {% if profile.birthday %}
+          <p class="text-muted">Birthday : {{ profile.birthday|date:"F d, Y" }}</p>
+          {% endif %}
+          {% if profile.location %}
+          <p class="text-muted">Location : {{ profile.location }}</p>
+          {% endif %}
+          {% if profile.username == request.user %}
+          <a href="{% url 'profile-edit' profile.username.pk %}" type="button" class="btn btn-outline-dark" style="width: 14rem;">Edit Profile</a>
+          {% else %}
+          {% if is_following %}
+          <form method="POST" action="{% url 'unfollow' profile.username.pk %}">
+            {% csrf_token %}
+            
+          <button type="submit" class="btn btn-outline-danger" style="width: 6rem;">Unfollow</button>
+          </form>
+          {% else %}
+          <form method="POST" action="{% url 'follow' profile.username.pk %}">
+            {% csrf_token %}
+            
+          <button type="submit" class="btn btn-outline-success" style="width: 6rem;">Follow</button>
+          </form>
+          {% endif %} 
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </div> 
+</div>  
+</div> 
+    
+    <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Posts</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Saved Posts</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="container">
+          <div class="row">
+           {% for post in blog_post %}
+          <div class="col-md-6 col-sm-12">
+          <div class="card shadow-sm p-3 mb-5 rounded text-dark mb-3" style="max-width: 50rem; height: 15rem; border:none;">
+              <div class="card-body">
+                <small style="text-decoration: none;" class="text-success"><i class="far fa-user-circle"></i> <a style="text-decoration: none;" class="text-success" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a></small>
+                <div class="position-relative">
+                <h2 class="card-title mt-3">{{post.title}}</h2>
+                <p class="card-text text-muted">{{post.meta_description}}</p>
+                <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                </div>
+                <p class="text-muted">{{ post.posted_on|date:"F d, Y"}}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          </div>
+      </div>
+      </div>
+
+      <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="container">
+          <div class="row">
+           {% for post in post_save %}
+          <div class="col-md-6 col-sm-12">
+          <div class="card shadow-sm p-3 mb-5 rounded text-dark mb-3" style="max-width: 50rem; height: 15rem; border:none;">
+              <div class="card-body">
+                <small style="text-decoration: none;" class="text-success"><i class="far fa-user-circle"></i> <a style="text-decoration: none;" class="text-success" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a></small>
+                <div class="position-relative">
+                <h2 class="card-title mt-3">{{post.title}}</h2>
+                <p class="card-text text-muted">{{post.meta_description}}</p>
+                <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                </div>
+                <p class="text-muted">{{ post.posted_on|date:"F d, Y"}}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          </div>
+      </div>
+      </div>
+      <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
+    </div>
+      
+{% endblock content %}

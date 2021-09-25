@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+  <div class="row">
+
+      <form class="d-flex mt-4" method="GET" action="{% url 'search-post' %}">
+        <input class="form-control me-2" type="text" placeholder="Search Post" aria-label="Search"  name="query" value="{{request.GET.query}}" style="width: 47em;">
+        <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
+      </form>
+
+      <div class="col-md-12 col-sm-12 pt-5">
+        {% for post in post_list %}
+      <div class="card shadow-sm p-3 mb-5 rounded text-dark mb-3" style="max-width: 50rem; height: 18rem; border:none;">
+          <div class="card-body">
+            <small style="text-decoration: none;" class="text-success"><i class="far fa-user-circle"></i> <a style="text-decoration: none;" class="text-success" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a></small>
+            <div class="position-relative">
+            <h2 class="card-title mt-3">{{post.title}}</h2>
+            <p class="card-text text-muted">{{post.meta_description}}</p>
+            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+            </div>
+            <p class="text-muted">{{ post.posted_on|date:"F d, Y"}}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div> 
+{% endblock content %}

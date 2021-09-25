@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+  <div class="row">
+
+      <form class="d-flex mt-4" method="GET" action="{% url 'search-people' %}">
+        <input class="form-control me-2" type="text" placeholder="Search People" aria-label="Search"  name="query" value="{{request.GET.query}}" style="width: 36rem;">
+        <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
+      </form>
+
+      {% for profile in profile_list %}
+      <div class="col-md-4 col-sm-12 pt-5">
+      <div class="card shadow-sm p-3 mb-5 rounded text-dark mb-3" style="max-width: 20rem; height: 15rem; border:none;">
+          <div class="card-body">
+            <h3 style="text-decoration: none;" class="text-success"> <a style="text-decoration: none;" class="text-success" href="{% url 'profile' profile.username.pk %}">{{profile.name}}</a></h3>
+            <small>{{profile.username}}</small>
+            <div class="pt-4">
+                <p class="card-text text-muted">followers: {{profile.follower.count}}</p>
+                <p class="card-text text-muted">following: {{profile.following.count}}</p>
+            </div>
+
+            </div>
+            <p class="text-muted"></p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div> 
+{% endblock content %}

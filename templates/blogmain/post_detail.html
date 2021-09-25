@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="mt-5">
+<div class="container">
+    <div class="row">
+      <a href="{% url 'blog-main' %}"><i class="fas fa-arrow-left"></i></a>
+ 
+    <div class="col-md-9 col-sm-12 mt-3">
+    <div class="card shadow-sm p-3 mb-2 rounded text-dark" style="max-width: 50rem; border:none;">
+        <div class="card-body">
+
+          <div class="row">
+          <div class="col-md-10 col-sm-6">
+            <small style="text-decoration: none;" class="text-success" href=""><i class="far fa-user-circle"></i> <a style="text-decoration: none;" class="text-success" href="{% url 'profile' post_detail.author.pk %}">{{ post_detail.author }}</a></small>
+          </div>
+          <div class="col-md-2 col-sm-6">
+         <div class="d-flex flex-row">
+
+          {% if is_saved %}
+          <form method="POST" action="{% url 'unsave-post' post_detail.pk %}">
+            {% csrf_token %}
+            
+            <button style="background-color: transparent; border: none; box-shadow:none;" type="submit">
+              <i class="fas fa-bookmark"></i>
+            </button>
+          </form>
+          {% else %}
+          <form method="POST" action="{% url 'save-post' post_detail.pk %}">
+            {% csrf_token %}
+            
+            <button style="background-color: transparent; border: none; box-shadow:none;" type="submit">
+              <i class="far fa-bookmark"></i>
+            </button>
+          </form>
+            {% endif %}
+
+          </div>
+          </div>
+        </div>
+
+          <h2 class="card-title mt-3">{{post_detail.title}}</h2>
+          <p class="card-text text-muted">{{post_detail.content}}</p>
+          <p class="text-muted">{{ post_detail.posted_on|date:"F d, Y"}}</p>
+          {% if request.user == post_detail.author %}
+          <a href="{% url 'post-edit' post_detail.pk %}"><i class="fas fa-edit"></i></a>
+          <a href="{% url 'post-delete' post_detail.pk %}"><i class="fas fa-trash"></i></a>
+          {% else %}
+          <div class="d-flex flex-row">
+            <form method="POST" action="{% url 'post-like' post_detail.pk %}">
+              {% csrf_token %}
+  
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button style="background-color: transparent; border: none; box-shadow:none;" type="submit">
+              <i class="far fa-thumbs-up">{{ post_detail.like.count }}</i>
+            </button>
+            </form>
+  
+            <form method="POST" action="{% url 'post-dislike' post_detail.pk %}">
+              {% csrf_token %}
+  
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button style="background-color: transparent; border: none; box-shadow:none;" type="submit">
+              <i class="far fa-thumbs-down">{{ post_detail.dislike.count }}</i>
+            </button>
+            </form>
+          </div>
+          {% endif %}
+    
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-5 rounded text-dark" style="max-width: 50rem; border:none;">
+        <div class="card-body">
+        
+       <form class="d-flex flex-row" method="POST" action="">
+         {% csrf_token %}
+         {{ comment_form|crispy }}
+        
+        <button class="btn btn-outline-dark" type="submit"><i class="fas fa-paper-plane"></i></button>
+      </form>
+  
+      {% for comment in comment_show %}
+      <hr>
+      <p>
+          <small style="text-decoration: none;" class="text-success" href=""><i class="far fa-user-circle"></i> <a style="text-decoration: none;" class="text-success" href="{% url 'profile' comment.author.pk %}">{{ comment.author }}</a></small>
+        {% if request.user == comment.author %}
+             <a href="" style="color: #333;"><i class="fas fa-trash"></i></a>
+        {% endif %}
+     </p>
+    <p>{{ comment.comment_text }}</p> 
+    <a href="{% url 'comment-reply' comment.pk %}"><i class="far fa-comment-dots"></i></a>  
+    <hr> 
+    {% endfor %}  
+        </div>
+      </div>
+    
+
+    </div>
+
+    </div>
+</div> 
+</div>  
+{% endblock content %}

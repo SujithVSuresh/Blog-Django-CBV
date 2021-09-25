@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-7 col-sm-12">
+            <h1 class="display-2">Plugger is a place to write, read, and connect.</h1>
+            <p class="mt-3 lead">It's easy and free to post your thinking on any topic and connect with millions of readers.</p>
+            <div class="d-flex mt-4">  
+                {% if user.is_authenticated %}      
+                <a href="{% url 'blog-main' %}" class="btn btn-dark">Explore</a>
+                {% else %}
+                <a href="{% url 'account_login' %}" class="btn btn-dark">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-dark mt-5 p-5">
+<div class="container">
+    <div class="row">
+        <P class="text-light"><i class="fab fa-wpexplorer"></i> DISCOVER MORE OF WHAT MATTERS TO YOU</P>
+        {% for categories in category %}
+        <div class="col-md-3 col-sm-12 mt-2">
+        <a href="{% url 'topic-post' categories.pk %}" type="button" class="btn btn-outline-light" style="width: 14rem;">{{ categories.name }}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div> 
+</div>
+
+<div class="mt-5">
+<div class="container">
+    <div class="row">
+    <P><i class="far fa-clock"></i> LATEST ON PLUGGER</P>
+     {% for post in blog %}
+    <div class="col-md-6 col-sm-12">
+    <div class="card shadow-sm p-3 mb-5 rounded text-dark mb-3" style="max-width: 50rem; height: 18rem; border:none;">
+        <div class="card-body">
+          <small style="text-decoration: none;" class="text-success"><i class="far fa-user-circle"></i> <a style="text-decoration: none;" class="text-success" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a></small>
+          <div class="position-relative">
+          <h2 class="card-title mt-3">{{post.title}}</h2>
+          <p class="card-text text-muted">{{post.meta_description}}</p>
+          <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+          </div>
+          <p class="text-muted">{{ post.posted_on|date:"F d, Y"}}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+</div> 
+</div>  
+{% endblock content %}

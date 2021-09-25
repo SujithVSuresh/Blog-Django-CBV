@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="mt-4">
+<div class="container">
+    <a href="{% url 'landing' %}"><i class="fas fa-arrow-left"></i></a>
+
+    <div class="row mt-4">
+    <div class="col-md-12 col-sm-12">
+      <div class="card shadow-sm p-3 mb-5 rounded text-dark mb-3" style="max-width: 50rem; border:none;">
+          <div class="card-body">
+            <h2>{{category.name}}</h2>
+            <p class="card-text text-muted">{{category.category_description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      {% for post in topic_post %}
+      <div class="col-md-6 col-sm-12">
+      <div class="card shadow-sm p-3 mb-5 rounded text-dark mb-3" style="max-width: 50rem; height: 18rem; border:none;">
+          <div class="card-body">
+            <small style="text-decoration: none;" class="text-success"><i class="far fa-user-circle"></i> <a style="text-decoration: none;" class="text-success" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a></small>
+            <div class="position-relative">
+            <h2 class="card-title mt-3">{{post.title}}</h2>
+            <p class="card-text text-muted">{{post.meta_description}}</p>
+            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+            </div>
+            <p class="text-muted">{{ post.posted_on|date:"F d, Y"}}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    
+    </div>
+</div> 
+</div>  
+{% endblock content %}
