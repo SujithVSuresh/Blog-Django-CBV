@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from blogmain.models import BlogPost, Category
-from datetime import datetime, timedelta
+
 # Create your views here.
 
 class Landing(View):
